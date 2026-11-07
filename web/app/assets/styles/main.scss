@@ -1,0 +1,547 @@
+@use './tokens.scss' as *;
+
+// ============================================================
+// 全局基础样式
+// 排版 / 控件 / 状态 / 动效
+// ============================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color var(--dur-panel) var(--ease-out),
+    color var(--dur-panel) var(--ease-out);
+}
+
+// ---------------- 排版 ----------------
+// 层级靠「字号 + 字重 + 墨色」三档共同承担，而非只靠字号
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  text-wrap: balance; // 标题避免孤字
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  letter-spacing: -0.015em;
+}
+h2 {
+  font-size: var(--fs-h2);
+  letter-spacing: -0.012em;
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+h4 {
+  font-size: var(--fs-h4);
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty; // 正文避免孤行
+}
+
+// 元信息层：全大写小字 + 加字距，是后台界面里最常见的标签形态
+.meta-label {
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+// 数字：等宽，避免跳动
+.figure,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: var(--seal);
+  text-decoration: none;
+  transition: color var(--dur-press) var(--ease-out);
+
+  &:hover {
+    color: var(--seal-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+  border-radius: var(--r-control);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+code {
+  padding: 0.15em 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--paper-inset);
+  border-radius: var(--r-control);
+}
+
+pre {
+  padding: var(--gap-lg);
+  overflow-x: auto;
+  background: var(--paper-inset);
+  border: 1px solid var(--vellum);
+  border-radius: var(--r-card);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body-sm);
+
+  code {
+    padding: 0;
+    background: none;
+  }
+}
+
+hr {
+  margin: var(--gap-xl) 0;
+  border: 0;
+  border-top: 1px solid var(--vellum);
+}
+
+// ---------------- 焦点：键盘可见，鼠标不可见 ----------------
+:focus-visible {
+  outline: 2px solid var(--vellum-focus);
+  outline-offset: 2px;
+  border-radius: var(--r-control);
+}
+
+// ---------------- 滚动条 ----------------
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--vellum-strong);
+  border-radius: var(--r-pill);
+  border: 3px solid transparent;
+  background-clip: content-box;
+
+  &:hover {
+    background: var(--ink-ghost);
+    background-clip: content-box;
+  }
+}
+
+// ============================================================
+// 容器与面板
+// ============================================================
+
+.sheet {
+  background: var(--paper-raised);
+  border-radius: var(--r-card);
+  box-shadow: var(--lift-card);
+}
+
+// 页面头部：分类标签 + 标题，构成一组
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-lg);
+  flex-wrap: wrap;
+
+  .meta-label {
+    display: block;
+    margin-bottom: var(--gap-xs);
+  }
+
+  h1 {
+    font-size: var(--fs-h1);
+  }
+}
+
+// 页面标题（不带右侧操作时）
+.page-title {
+  .meta-label {
+    display: block;
+    margin-bottom: var(--gap-xs);
+  }
+
+  h1 {
+    font-size: var(--fs-h1);
+  }
+}
+
+// ============================================================
+// 控件
+// ============================================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: 0 var(--gap-lg);
+  height: 34px;
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--paper-raised);
+  color: var(--ink);
+  border: 1px solid var(--vellum);
+  border-radius: var(--r-control);
+  transition:
+    background-color var(--dur-press) var(--ease-out),
+    border-color var(--dur-press) var(--ease-out),
+    color var(--dur-press) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+
+  &:hover:not(:disabled) {
+    background: var(--paper-tint);
+    border-color: var(--vellum-strong);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &.btn-seal {
+    background: var(--seal);
+    color: var(--seal-ink);
+    border-color: transparent;
+    font-weight: 550;
+
+    &:hover:not(:disabled) {
+      background: var(--seal-hover);
+    }
+  }
+
+  &.btn-quiet {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ink-soft);
+
+    &:hover:not(:disabled) {
+      background: var(--paper-tint);
+      color: var(--ink);
+      border-color: transparent;
+    }
+  }
+
+  &.btn-danger {
+    color: var(--stamp-bad);
+    border-color: var(--vellum);
+
+    &:hover:not(:disabled) {
+      background: var(--stamp-bad-soft);
+      border-color: var(--stamp-bad);
+    }
+  }
+
+  &.btn-sm {
+    height: 28px;
+    padding: 0 var(--gap-md);
+    font-size: var(--fs-meta);
+  }
+
+  // 图标按钮：保证 40px 命中区
+  &.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--ink-soft);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+    }
+
+    position: relative;
+  }
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: var(--gap-sm) var(--gap-md);
+  font-size: var(--fs-body-sm);
+  color: var(--ink);
+  // 输入框比周围更暗：它是凹陷的，用来「接收内容」
+  background: var(--paper-inset);
+  border: 1px solid var(--vellum);
+  border-radius: var(--r-control);
+  outline: none;
+  transition:
+    border-color var(--dur-press) var(--ease-out),
+    box-shadow var(--dur-press) var(--ease-out),
+    background-color var(--dur-press) var(--ease-out);
+
+  &::placeholder {
+    color: var(--ink-ghost);
+  }
+
+  &:focus {
+    background: var(--paper-raised);
+    border-color: var(--seal);
+    box-shadow: 0 0 0 3px var(--seal-soft);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.select {
+  height: 34px;
+  padding-right: var(--gap-lg);
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
+    linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%);
+  background-position:
+    calc(100% - 15px) calc(50% + 1px),
+    calc(100% - 10px) calc(50% + 1px);
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+// ============================================================
+// 标签 / 印记
+// ============================================================
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: 2px var(--gap-sm);
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--paper-tint);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-press) var(--ease-out),
+    color var(--dur-press) var(--ease-out),
+    border-color var(--dur-press) var(--ease-out);
+
+  &:hover {
+    background: var(--paper-inset);
+    color: var(--ink);
+  }
+
+  &.chip-on {
+    background: var(--seal-soft);
+    color: var(--seal);
+    border-color: var(--seal);
+  }
+}
+
+// 印记：可见性 / 状态标记，替代彩色圆点
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: 1px var(--gap-sm);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: var(--r-control);
+  border: 1px solid currentColor;
+  opacity: 0.85;
+
+  &.stamp-open {
+    color: var(--seal);
+    background: var(--seal-soft);
+  }
+  &.stamp-private {
+    color: var(--stamp-info);
+    background: var(--stamp-info-soft);
+  }
+  &.stamp-archived {
+    color: var(--ink-faint);
+    background: var(--paper-tint);
+  }
+}
+
+.divider {
+  height: 1px;
+  background: var(--vellum);
+  margin: var(--gap-lg) 0;
+}
+
+// ============================================================
+// 状态：加载 / 空 / 错误
+// ============================================================
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  // 空状态是内容，不占满容器
+  align-self: start;
+  padding: var(--gap-3xl) var(--gap-xl);
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: var(--fs-body-sm);
+  // 空状态是内容，不占满容器
+  align-self: start;
+  max-width: 100%;
+
+  .empty-mark {
+    font-size: 28px;
+    opacity: 0.35;
+  }
+
+  // 空状态必须给一个明确的下一步
+  .empty-action {
+    margin-top: var(--gap-sm);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--vellum-strong);
+  border-top-color: var(--seal);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: var(--gap-md) var(--gap-lg);
+  font-size: var(--fs-body-sm);
+  border-radius: var(--r-control);
+  border: 1px solid currentColor;
+
+  &.notice-error {
+    color: var(--stamp-bad);
+    background: var(--stamp-bad-soft);
+  }
+  &.notice-good {
+    color: var(--stamp-good);
+    background: var(--stamp-good-soft);
+  }
+}
+
+// 骨架屏：结构性占位，避免加载时的布局跳动
+.skeleton {
+  background: linear-gradient(90deg, var(--paper-tint) 25%, var(--paper-inset) 50%, var(--paper-tint) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--r-control);
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+// ============================================================
+// 动效
+// ============================================================
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--dur-pop) var(--ease-out);
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.rise-enter-active {
+  transition:
+    opacity var(--dur-panel) var(--ease-out),
+    transform var(--dur-panel) var(--ease-out);
+}
+.rise-leave-active {
+  transition:
+    opacity var(--dur-press) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.rise-enter-from,
+.rise-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+// 用户要求减少动效时，保留透明度过渡，去掉位移
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .rise-enter-from,
+  .rise-leave-to {
+    transform: none;
+  }
+}
