@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": false,
+    "sourceMap": true,
+    "types": ["node"],
+    "noEmit": true,
+    "paths": {
+      "~/*": ["./app/*"],
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "include": ["scripts/**/*.ts", "app/utils/**/*.ts", "app/types/**/*.ts", "../shared/**/*.ts"]
+}
